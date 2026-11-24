@@ -1,0 +1,307 @@
+
+# =============================================================================
+# Water Tank Dynamics Simulator
+# Python / Scientific Computing / Numerical Modeling
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Python bytecode and compiled extensions
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.dll
+*.dylib
+
+# -----------------------------------------------------------------------------
+# Virtual environments
+# -----------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.venv*/
+venv.bak/
+env.bak/
+.python-version.local
+__pypackages__/
+
+# -----------------------------------------------------------------------------
+# Python packaging and distribution
+# -----------------------------------------------------------------------------
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-wheel-metadata/
+*.whl
+
+# -----------------------------------------------------------------------------
+# uv and dependency management
+# -----------------------------------------------------------------------------
+.uv-cache/
+uv-cache/
+
+# Keep dependency and interpreter configuration under version control.
+!uv.lock
+!pyproject.toml
+!.python-version
+
+# -----------------------------------------------------------------------------
+# Testing and code coverage
+# -----------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+htmlcov/
+.cover/
+.tox/
+.nox/
+.hypothesis/
+test-results/
+test-reports/
+junit.xml
+*.cover
+*.py,cover
+
+# -----------------------------------------------------------------------------
+# Static analysis, formatting and linting
+# -----------------------------------------------------------------------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+.pyright/
+.cache/
+.pylint.d/
+
+# -----------------------------------------------------------------------------
+# JetBrains IDEs
+# PyCharm, IntelliJ IDEA, DataSpell, CLion
+# -----------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+cmake-build-*/
+.idea_modules/
+
+# -----------------------------------------------------------------------------
+# Spyder IDE
+# -----------------------------------------------------------------------------
+.spyderproject
+.spyderworkspace
+.spyproject/
+.spyder/
+.spyder-py3/
+.spyder-py*/
+.spyderproject/
+.spyderworkspace/
+
+# -----------------------------------------------------------------------------
+# Visual Studio Code
+# -----------------------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace
+.history/
+.ionide/
+
+# -----------------------------------------------------------------------------
+# Jupyter and IPython
+# -----------------------------------------------------------------------------
+.ipynb_checkpoints/
+.profile_default/
+profile_default/
+.ipython/
+ipython_config.py
+
+# -----------------------------------------------------------------------------
+# Environment variables, credentials and secrets
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+.envrc
+secrets/
+credentials/
+credentials.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+.netrc
+.pypirc
+
+# -----------------------------------------------------------------------------
+# Scientific computing and numerical compilation caches
+# -----------------------------------------------------------------------------
+.numba_cache/
+*.nbc
+*.nbi
+.mplconfig/
+.matplotlib/
+.fontconfig/
+
+# -----------------------------------------------------------------------------
+# Generated simulation and experiment outputs
+# -----------------------------------------------------------------------------
+/outputs/
+/results/
+/runs/
+/artifacts/
+/scratch/
+/tmp/
+/temp/
+
+/experiments/outputs/
+/experiments/results/
+/experiments/runs/
+/experiments/scratch/
+
+/data/generated/
+/data/processed/
+/data/cache/
+/data/temporary/
+
+# Preserve source datasets, analytical benchmarks, test fixtures,
+# reference solutions and intentionally published figures.
+# Do not globally ignore CSV, JSON, NPY, NPZ, PNG or SVG files.
+
+# -----------------------------------------------------------------------------
+# Profiling and performance analysis
+# -----------------------------------------------------------------------------
+.profiler/
+profiling/
+.benchmarks/
+*.prof
+*.pstats
+*.lprof
+*.pyperf
+
+# -----------------------------------------------------------------------------
+# Documentation builds
+# -----------------------------------------------------------------------------
+/site/
+/docs/_build/
+/docs/build/
+/docs/.doctrees/
+.readthedocs/
+.mkdocs_cache/
+
+# -----------------------------------------------------------------------------
+# LaTeX auxiliary files
+# -----------------------------------------------------------------------------
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
+# -----------------------------------------------------------------------------
+# Logs and runtime files
+# -----------------------------------------------------------------------------
+*.log
+logs/
+*.pid
+*.pid.lock
+*.stackdump
+*.trace
+
+# -----------------------------------------------------------------------------
+# Temporary files and editor backups
+# -----------------------------------------------------------------------------
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+*.swn
+*~
+\#*\#
+.\#*
+
+# -----------------------------------------------------------------------------
+# Linux
+# -----------------------------------------------------------------------------
+.directory
+.Trash-*
+.nfs*
+.fuse_hidden*
+
+# -----------------------------------------------------------------------------
+# macOS
+# -----------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# -----------------------------------------------------------------------------
+# Windows
+# -----------------------------------------------------------------------------
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# -----------------------------------------------------------------------------
+# Local development tools
+# -----------------------------------------------------------------------------
+.direnv/
+.aider*
+.continue/
+.history/
+
+# -----------------------------------------------------------------------------
+# Local-only configuration
+# -----------------------------------------------------------------------------
+config.local.toml
+config.local.yaml
+config.local.yml
+config.local.json
+settings.local.json
+
+# -----------------------------------------------------------------------------
+# Merge and patch artifacts
+# -----------------------------------------------------------------------------
+*.orig
+*.rej
+
+# =============================================================================
+# End of .gitignore
+# =============================================================================
