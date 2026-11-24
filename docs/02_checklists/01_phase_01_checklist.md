@@ -8,10 +8,10 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 
 ## 0. Independent development workflow
 
-- [ ] Configure Spyder to use the repository's Python 3.12 virtual environment; install a compatible spyder-kernels version if required by Spyder.
-- [ ] Verify the interpreter and imports in the IPython console.
-- [ ] Confirm uv.lock, pyproject.toml and .python-version are tracked.
-- [ ] Confirm NumPy, SciPy and Matplotlib are runtime dependencies and pytest is a development dependency.
+- [x] Configure Spyder to use the repository's Python 3.12 virtual environment; install a compatible spyder-kernels version if required by Spyder.
+- [x] Verify the interpreter and imports in the IPython console.
+- [x] Confirm uv.lock, pyproject.toml and .python-version are tracked.
+- [x] Confirm NumPy, SciPy and Matplotlib are runtime dependencies and pytest is a development dependency.
 - [ ] Verify the src-layout package is importable in Spyder and from the terminal.
 - [ ] Disable AI code generation if enabled; use ordinary editor completion, debugger, official documentation and textbooks.
 - [ ] Maintain a short learning log: hypothesis, attempted approach, observed error, diagnosis and resolution.
