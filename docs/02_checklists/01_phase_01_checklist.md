@@ -12,9 +12,9 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 - [x] Verify the interpreter and imports in the IPython console.
 - [x] Confirm uv.lock, pyproject.toml and .python-version are tracked.
 - [x] Confirm NumPy, SciPy and Matplotlib are runtime dependencies and pytest is a development dependency.
-- [ ] Verify the src-layout package is importable in Spyder and from the terminal.
-- [ ] Disable AI code generation if enabled; use ordinary editor completion, debugger, official documentation and textbooks.
-- [ ] Maintain a short learning log: hypothesis, attempted approach, observed error, diagnosis and resolution.
+- [x] Verify the src-layout package is importable in Spyder and from the terminal.
+- [x] Disable AI code generation if enabled; use ordinary editor completion, debugger, official documentation and textbooks.
+- [x] Maintain a short learning log: hypothesis, attempted approach, observed error, diagnosis and resolution.
 - [ ] Run experiments interactively, then move reproducible calculations into modules and tests.
 
 **Completion gate:** A fresh console can import the package and `uv run pytest` can discover tests once written.

@@ -21,8 +21,19 @@ water-tank-dynamics/
 │   │   ├── 02_mathematical_model.md
 │   │   ├── 03_numerical_methods.md
 │   │   └── 04_verification.md
-│   └── 01_architecture/
-│       └── 00_structure.md
+│   ├── 01_architecture/
+│   │   └── 00_structure.md
+│   ├── 02_checklists/
+│   │   └── 01_phase_01_checklist.md
+│   ├── 03_research/
+│   └── 04_logs/
+│       ├── 00_scientific_log_template.md
+│       ├── 01_learning_log_template.md
+│       ├── phase_01/
+│       │   └── YYYYMMDD_session_001.md
+│       ├── phase_02/
+│       └── phase_03/
+│
 ├── src/
 │   └── tank_dynamics/
 │       ├── __init__.py
@@ -94,6 +105,7 @@ water-tank-dynamics/
 │           ├── phase_space.py
 │           ├── convergence.py
 │           └── comparison.py
+│
 ├── experiments/
 │   ├── phase_01/
 │   │   ├── 01_gravity_drainage.py
@@ -107,6 +119,7 @@ water-tank-dynamics/
 │       ├── 01_closed_equalization.py
 │       ├── 02_forced_reservoirs.py
 │       └── 03_flow_reversal.py
+│
 └── tests/
     ├── unit/
     │   ├── core/
