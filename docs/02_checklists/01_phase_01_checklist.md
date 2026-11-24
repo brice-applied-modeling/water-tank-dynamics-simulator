@@ -4,6 +4,8 @@
 
 Develop a verified single-tank ODE simulator independently in Spyder using Python 3.12, uv, NumPy, SciPy, Matplotlib and pytest. This is a learning assignment, not a code solution. Phase 02 (chlorine) and Phase 03 (coupled reservoirs) are outside this phase, but numerical interfaces must accommodate future vector-valued states.
 
+**Unit convention:** US water and wastewater industry-standard units. Hydraulic calculations use ft, ft², ft³, cfs and seconds internally. Engineering reporting uses inches, US gallons, gpm, MGD and minutes as appropriate. Future chlorine concentrations remain in mg/L; numerical solvers remain unit-independent.
+
 Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathematical model](../00_overview/02_mathematical_model.md), [Numerical methods](../00_overview/03_numerical_methods.md), [Verification](../00_overview/04_verification.md), [Architecture](../01_architecture/00_structure.md).
 
 ## 0. Independent development workflow
@@ -27,7 +29,7 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 - [ ] Derive conservation of volume and substitute the tank geometry relationship.
 - [ ] Derive or justify Torricelli discharge including the discharge coefficient.
 - [ ] Obtain the first-order nonlinear water-depth ODE.
-- [ ] Check dimensional consistency of each term in SI units.
+- [ ] Check dimensional consistency of each term using feet, cubic feet and seconds.
 - [ ] Derive the zero-inflow analytical solution by separation of variables without consulting implementation code.
 - [ ] Derive the emptying time and explain why the analytical expression must not be extended past emptying without a physical boundary condition.
 - [ ] Determine the equilibrium condition for constant positive inflow; explain the sign of the derivative above and below equilibrium.
@@ -36,9 +38,10 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 
 ## 2. Physical model and hydraulic functions
 
-Suggested modules: `core/constants.py`, `core/validation.py`, `hydraulics/geometry.py`, `hydraulics/discharge.py`, `models/single_tank/parameters.py`, `tank.py`, `equations.py`, `analytical.py`.
+Suggested modules: `core/constants.py`, `core/units.py`, `core/validation.py`, `hydraulics/geometry.py`, `hydraulics/discharge.py`, `models/single_tank/parameters.py`, `tank.py`, `equations.py`, `analytical.py`.
 
-- [ ] Define gravity and SI conventions; use seconds internally.
+- [ ] Define gravity (32.174 ft/s²) and US customary hydraulic conventions; use feet, cubic feet, cfs and seconds internally.
+- [ ] Implement and independently test unit conversions in `core/units.py`: inches to feet, cubic feet to US gallons, cfs to gpm, and seconds to minutes. Convert inputs before hydraulic calculations and convert outputs for reporting.
 - [ ] Decide how to represent tank area, outlet area or diameter, discharge coefficient and initial depth.
 - [ ] Validate finite parameters, positive tank area and outlet dimensions, nonnegative depth and physically appropriate discharge coefficient.
 - [ ] Implement geometry and orifice discharge calculations independently.
@@ -114,13 +117,13 @@ Suggested modules: `models/single_tank/events.py`, `simulation/config.py`, `runn
 
 Suggested modules: `analysis/error_metrics.py`, `convergence.py`, `conservation.py`, `benchmarking.py`.
 
-- [ ] Define absolute error, RMSE and maximum absolute error at matched output times.
+- [ ] Define absolute error, RMSE and maximum absolute error at matched output times; report depth errors in ft or in.
 - [ ] Avoid relative error at zero or document a denominator threshold.
 - [ ] Choose a smooth pre-emptying interval and at least four successively halved step sizes.
 - [ ] Calculate observed convergence order from error ratios.
 - [ ] Plot error versus step size on logarithmic axes and interpret departures from theoretical slopes.
 - [ ] Compare estimated emptying time with the analytical benchmark separately from smooth convergence tests.
-- [ ] Check volume balance: change in storage equals integrated net inflow, within a documented numerical tolerance.
+- [ ] Check volume balance in ft³: change in storage equals integrated net inflow (cfs integrated over seconds), within a documented numerical tolerance.
 - [ ] Document the quadrature used for flow integration and its own error contribution.
 - [ ] Record runtime and derivative evaluations; repeat timing measurements if making performance claims.
 - [ ] Define and justify acceptance tolerances before final verification runs.
@@ -128,14 +131,16 @@ Suggested modules: `analysis/error_metrics.py`, `convergence.py`, `conservation.
 
 ### Baseline benchmark
 
+Use the rounded US customary facility parameters from the [Phase 01 applied project scope](../05_applied_projects/01_phase_01_tank_drawdown.md). These are replacement inputs, not exact conversions of the previous SI benchmark. Recalculate all analytical reference values independently.
+
 | Parameter | Value |
 |---|---:|
-| Tank area | 10 m² |
-| Initial depth | 3 m |
-| Outlet diameter | 0.075 m |
+| Tank area | 100 ft² |
+| Initial depth | 10 ft |
+| Outlet diameter | 3 in |
 | Discharge coefficient | 0.62 |
-| Gravity | 9.81 m/s² |
-| Inflow | 0 m³/s |
+| Gravity | 32.174 ft/s² |
+| Inflow | 0 cfs |
 
 - [ ] Independently calculate outlet area, initial volume, initial discharge and analytical emptying time.
 - [ ] Record expected values before executing the numerical model.
@@ -145,7 +150,7 @@ Suggested modules: `analysis/error_metrics.py`, `convergence.py`, `conservation.
 
 - [ ] Create `experiments/phase_01/01_gravity_drainage.py`: plot analytical and numerical depth and discharge histories.
 - [ ] Create `experiments/phase_01/02_solver_comparison.py`: compare all four solvers at matched times and produce convergence plots.
-- [ ] Label plots with units, parameters, solver and step size/tolerances.
+- [ ] Label plots with units, parameters, solver and step size/tolerances. Report depth in ft, volume in US gal, discharge in gpm or cfs, elapsed time in minutes and depth errors in ft or in.
 - [ ] Keep plotting functions separate from integration algorithms.
 - [ ] Save reproducible experiment inputs and selected reference figures; keep disposable outputs in ignored directories.
 - [ ] Write a short interpretation of each experiment, including limitations and unexpected behavior.
