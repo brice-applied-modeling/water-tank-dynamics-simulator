@@ -454,7 +454,7 @@ $$
 For a quasi-steady connection between tanks with a common elevation datum and atmospheric free surfaces, a simplified bidirectional flow law is:
 
 $$
-Q_{12}=C_da\operatorname{sgn}(h_1-h_2)\sqrt{2g|h_1-h_2|}
+Q_{12} = C_d a \, \mathrm{sgn}(h_1-h_2)\sqrt{2g\left|h_1-h_2\right|}
 $$
 
 | Symbol | Description | Computational Unit |
