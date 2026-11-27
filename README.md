@@ -440,54 +440,306 @@ where $M$ is constituent mass in pounds, $V$ is stored volume in million gallons
 
 ### Phase 03: Coupled Reservoir Dynamics (Future)
 
-Extend the framework to interconnected tanks with simultaneous changes in water depth.
+Extend the framework to interconnected reservoirs with simultaneous changes in water surface elevations and bidirectional flow driven by differences in hydraulic head.
 
-For two constant-area tanks with a submerged connection and an external outlet from tank 2:
+#### Conservation of Volume
 
-$$
-\begin{aligned}
-A_1\frac{dh_1}{dt}&=Q_{in}-Q_{12}\\
-A_2\frac{dh_2}{dt}&=Q_{12}-Q_{out}
-\end{aligned}
-$$
+Consider two constant-area reservoirs connected by a submerged hydraulic connection. Reservoir 1 receives external inflow, and Reservoir 2 discharges through an external outlet.
 
-For a quasi-steady connection between tanks with a common elevation datum and atmospheric free surfaces, a simplified bidirectional flow law is:
+The governing equations are derived independently for each reservoir using conservation of volume.
+
+**Reservoir 1:**
 
 $$
-Q_{12} = C_d a \, \mathrm{sgn}(h_1-h_2)\sqrt{2g\left|h_1-h_2\right|}
+A_1\frac{dh_1}{dt}=Q_{in}-Q_{12}
 $$
 
-| Symbol | Description | Computational Unit |
+**Reservoir 2:**
+
+$$
+A_2\frac{dh_2}{dt}=Q_{12}-Q_{out}
+$$
+
+where:
+
+| Symbol | Description | Unit |
 |---|---|---|
-| $A_1$ | Tank 1 cross-sectional area | ft² |
-| $A_2$ | Tank 2 cross-sectional area | ft² |
-| $h_1$ | Tank 1 water surface head relative to common datum | ft |
-| $h_2$ | Tank 2 water surface head relative to common datum | ft |
-| $a$ | Connection cross-sectional area | ft² |
+| $A_1$ | Reservoir 1 cross-sectional area | ft² |
+| $A_2$ | Reservoir 2 cross-sectional area | ft² |
+| $h_1$ | Reservoir 1 water surface elevation relative to a common datum | ft |
+| $h_2$ | Reservoir 2 water surface elevation relative to a common datum | ft |
+| $Q_{in}$ | External inflow to Reservoir 1 | gpm, cfs |
+| $Q_{12}$ | Signed flow between reservoirs | gpm, cfs |
+| $Q_{out}$ | External discharge from Reservoir 2 | gpm, cfs |
+| $t$ | Elapsed time | s, min |
+| $dh_1/dt$ | Rate of change in Reservoir 1 water surface elevation | ft/s, ft/min |
+| $dh_2/dt$ | Rate of change in Reservoir 2 water surface elevation | ft/s, ft/min |
+
+Appropriate conversion factors must be applied to maintain dimensional consistency.
+
+#### Inter-Reservoir Hydraulic Head Difference
+
+The hydraulic head difference between the two reservoirs is defined as:
+
+$$
+\Delta h=h_1-h_2
+$$
+
+where:
+
+| Symbol | Description | Unit |
+|---|---|---|
+| $\Delta h$ | Hydraulic head difference between reservoirs | ft |
+| $h_1$ | Reservoir 1 water surface elevation | ft |
+| $h_2$ | Reservoir 2 water surface elevation | ft |
+
+Both water surface elevations must be referenced to a common elevation datum.
+
+The hydraulic head difference establishes the driving force and direction of flow between the reservoirs.
+
+#### Bidirectional Flow Relationship
+
+For a submerged connection governed by a simplified quasi-steady orifice discharge relationship:
+
+$$
+Q_{12}=C_da\operatorname{sgn}(\Delta h)\sqrt{2g|\Delta h|}
+$$
+
+where:
+
+| Symbol | Description | Unit |
+|---|---|---|
+| $Q_{12}$ | Signed inter-reservoir discharge | cfs |
 | $C_d$ | Connection discharge coefficient | Dimensionless |
-| $Q_{in}$ | External inflow | cfs |
-| $Q_{12}$ | Signed inter-tank flow | cfs |
-| $Q_{out}$ | External discharge | cfs |
-| $g$ | Gravitational acceleration | ft/s² |
-| $t$ | Elapsed time | s |
+| $a$ | Connection cross-sectional area | ft² |
+| $g$ | Gravitational acceleration (32.174) | ft/s² |
+| $\Delta h$ | Hydraulic head difference | ft |
+| $\operatorname{sgn}(\Delta h)$ | Sign function determining flow direction | Dimensionless |
+| $\lvert\Delta h\rvert$ | Absolute magnitude of the hydraulic head difference | ft |
 
-This relationship assumes both water surface heads are measured from the same elevation datum and the connection remains submerged.
+Discharge may be expressed in gpm by applying the appropriate conversion factor.
 
-The state vector is:
+#### Sign Function
+
+The sign function, also known as the signum function, is a mathematical operator that identifies whether a real number is positive, negative, or zero.
+
+It is defined as:
 
 $$
-\mathbf{y}=[h_1,h_2]^T
+\operatorname{sgn}(x)=\begin{cases}-1,&x<0\\0,&x=0\\1,&x>0\end{cases}
 $$
+
+where:
+
+| Symbol | Description |
+|---|---|
+| $x$ | Real-valued input to the sign function |
+| $\operatorname{sgn}(x)$ | Dimensionless value representing the sign of the input |
+
+The sign function returns the following values:
+
+| Input Condition | Return Value |
+|---|---:|
+| Negative | -1 |
+| Zero | 0 |
+| Positive | +1 |
+
+For this hydraulic model, the input to the sign function is the hydraulic head difference between the reservoirs:
+
+$$
+x=\Delta h=h_1-h_2
+$$
+
+The sign function establishes flow direction, while the absolute value of the hydraulic head difference establishes the magnitude of the driving head.
+
+#### Absolute Value Operator
+
+The absolute value operator returns the nonnegative magnitude of a real number, regardless of its original sign.
+
+The absolute value of the hydraulic head difference is defined as:
+
+$$
+|\Delta h|=\begin{cases}\Delta h,&\Delta h\geq0\\-\Delta h,&\Delta h<0\end{cases}
+$$
+
+The absolute value ensures that the quantity evaluated within the square root remains nonnegative, regardless of flow direction.
+
+For example:
+
+| Hydraulic Head Difference | Absolute Value |
+|---:|---:|
+| +5 ft | 5 ft |
+| 0 ft | 0 ft |
+| -5 ft | 5 ft |
+
+The absolute value determines the magnitude of the driving head but does not establish flow direction. Flow direction is determined independently by the sign function.
+
+#### Hydraulic Sign Convention
+
+Positive inter-reservoir flow is defined as flow from Reservoir 1 to Reservoir 2.
+
+| Hydraulic Condition | Sign of $Q_{12}$ | Flow Direction |
+|---|---|---|
+| $h_1>h_2$ | Positive | Reservoir 1 to Reservoir 2 |
+| $h_1=h_2$ | Zero | No inter-reservoir flow |
+| $h_1<h_2$ | Negative | Reservoir 2 to Reservoir 1 |
+
+A negative discharge represents reverse flow rather than a negative physical flow magnitude.
+
+The conservation equations account for the direction of inter-reservoir flow through the signed value of $Q_{12}$.
+
+#### Alternative Piecewise Formulation
+
+The bidirectional flow relationship may also be expressed without the sign function:
+
+$$
+Q_{12}=\begin{cases}C_da\sqrt{2g(h_1-h_2)},&h_1>h_2\\0,&h_1=h_2\\-C_da\sqrt{2g(h_2-h_1)},&h_1<h_2\end{cases}
+$$
+
+Both formulations are mathematically equivalent.
+
+The piecewise formulation explicitly defines three possible hydraulic conditions:
+
+**Forward flow:**
+
+When the water surface elevation in Reservoir 1 exceeds the water surface elevation in Reservoir 2:
+
+$$
+Q_{12}=C_da\sqrt{2g(h_1-h_2)}
+$$
+
+**Hydraulic equilibrium between reservoirs:**
+
+When both reservoirs have equal water surface elevations:
+
+$$
+Q_{12}=0
+$$
+
+**Reverse flow:**
+
+When the water surface elevation in Reservoir 2 exceeds the water surface elevation in Reservoir 1:
+
+$$
+Q_{12}=-C_da\sqrt{2g(h_2-h_1)}
+$$
+
+The sign-function formulation combines these three conditions into a single mathematical expression.
+
+#### State Vector
+
+The coupled system is represented by the state vector:
+
+$$
+\mathbf{y}(t)=\begin{bmatrix}h_1(t)\\h_2(t)\end{bmatrix}
+$$
+
+where:
+
+| Symbol | Description | Unit |
+|---|---|---|
+| $\mathbf{y}(t)$ | Time-dependent system state vector | ft for each component |
+| $h_1(t)$ | Reservoir 1 water surface elevation at time $t$ | ft |
+| $h_2(t)$ | Reservoir 2 water surface elevation at time $t$ | ft |
+| $t$ | Elapsed time | s, min |
+
+The state vector contains the dependent variables that must be evaluated simultaneously during numerical integration.
+
+Rearranging the conservation equations gives the individual state derivatives.
+
+**Reservoir 1:**
+
+$$
+\frac{dh_1}{dt}=\frac{Q_{in}-Q_{12}}{A_1}
+$$
+
+**Reservoir 2:**
+
+$$
+\frac{dh_2}{dt}=\frac{Q_{12}-Q_{out}}{A_2}
+$$
+
+The coupled system of ordinary differential equations may therefore be expressed as:
+
+$$
+\frac{d\mathbf{y}}{dt}=\begin{bmatrix}(Q_{in}-Q_{12})/A_1\\(Q_{12}-Q_{out})/A_2\end{bmatrix}
+$$
+
+Both state derivatives depend on the inter-reservoir discharge, which depends on the water surface elevations in both reservoirs.
+
+This interdependency establishes the coupled nature of the system.
+
+Appropriate unit conversions must be applied when flow rates and reservoir geometry are expressed in different volumetric or time units.
+
+#### Initial Conditions
+
+The initial state of the system is defined by the initial water surface elevation in each reservoir.
+
+$$
+h_1(0)=h_{1,0}
+$$
+
+$$
+h_2(0)=h_{2,0}
+$$
+
+The initial state vector is:
+
+$$
+\mathbf{y}_0=\begin{bmatrix}h_{1,0}\\h_{2,0}\end{bmatrix}
+$$
+
+where:
+
+| Symbol | Description | Unit |
+|---|---|---|
+| $h_{1,0}$ | Initial water surface elevation in Reservoir 1 | ft |
+| $h_{2,0}$ | Initial water surface elevation in Reservoir 2 | ft |
+| $\mathbf{y}_0$ | Initial system state vector | ft for each component |
+
+#### Physical Assumptions
+
+- Both reservoirs have constant cross-sectional areas.
+- Water is treated as an incompressible fluid.
+- Both reservoir free surfaces are exposed to atmospheric pressure.
+- Water surface elevations are referenced to a common datum.
+- The hydraulic connection remains submerged.
+- Inter-reservoir flow is governed by a quasi-steady orifice discharge relationship.
+- The discharge coefficient remains constant.
+- Fluid inertia and transient pressure effects within the connection are neglected.
+- Evaporation, leakage and unaccounted water losses are neglected.
+
+#### Model Limitations
+
+The simplified inter-reservoir flow relationship does not explicitly account for:
+
+- Distributed pipe friction losses.
+- Minor losses from individual fittings and valves.
+- Fluid acceleration within the hydraulic connection.
+- Water hammer and transient pressure effects.
+- Partially submerged hydraulic connections.
+- Changes in reservoir cross-sectional area with elevation.
+- Reservoir overflow.
+- Pump-controlled inter-reservoir flow.
+
+The external inflow and outlet discharge relationships, reservoir geometry, and physical boundary conditions will be established during the detailed development of the Phase 03 mathematical model.
 
 #### Development Objectives
 
-- [ ] Apply and verify the existing vector-compatible numerical solvers.
-- [ ] Model inter-tank flow, external inflow and discharge.
-- [ ] Investigate equalization, equilibrium and flow reversal.
-- [ ] Verify conservation of total stored volume.
-- [ ] Compare numerical results against independent reference solutions.
+- [ ] Derive the governing conservation equations.
+- [ ] Establish initial and boundary conditions.
+- [ ] Investigate bidirectional hydraulic flow relationships.
+- [ ] Implement and verify the hydraulic sign convention.
+- [ ] Apply numerical integration to coupled systems of ordinary differential equations.
+- [ ] Investigate hydraulic equalization.
+- [ ] Investigate flow reversal.
+- [ ] Evaluate equilibrium conditions under external inflow and discharge.
+- [ ] Verify conservation of total stored water volume.
+- [ ] Compare numerical results against independent analytical or reference solutions.
+- [ ] Evaluate numerical convergence and stability.
 - [ ] Complete scientific experiments.
-- [ ] Complete an interconnected storage applied engineering project.
+- [ ] Complete a coupled reservoir applied engineering project.
+- [ ] Document numerical accuracy, assumptions and model limitations.
 
 ## Numerical Architecture
 
