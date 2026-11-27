@@ -4,7 +4,7 @@
 
 Develop a verified single-tank ODE simulator independently in Spyder using Python 3.12, uv, NumPy, SciPy, Matplotlib and pytest. This is a learning assignment, not a code solution. Phase 02 (chlorine) and Phase 03 (coupled reservoirs) are outside this phase, but numerical interfaces must accommodate future vector-valued states.
 
-**Unit convention:** US water and wastewater industry-standard units. Hydraulic calculations use ft, ft², ft³, cfs and seconds internally. Engineering reporting uses inches, US gallons, gpm, MGD and minutes as appropriate. Future chlorine concentrations remain in mg/L; numerical solvers remain unit-independent.
+**Unit convention:** US water and wastewater industry-standard units. Use ft for depth and head, in for outlet diameter, ft² for area, gal/ft³/MG for volume, gpm/cfs/MGD for flow, fps for velocity, and s/min/hr/days for time as appropriate. Maintain dimensional consistency within each calculation and simulation; document necessary conversions. No universal computational unit system is prescribed. Future chlorine concentrations remain in mg/L; numerical solvers remain unit-independent.
 
 Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathematical model](../00_overview/02_mathematical_model.md), [Numerical methods](../00_overview/03_numerical_methods.md), [Verification](../00_overview/04_verification.md), [Architecture](../01_architecture/00_structure.md).
 
@@ -17,22 +17,30 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 - [x] Verify the src-layout package is importable in Spyder and from the terminal.
 - [x] Disable AI code generation if enabled; use ordinary editor completion, debugger, official documentation and textbooks.
 - [x] Maintain a short learning log: hypothesis, attempted approach, observed error, diagnosis and resolution.
+- [ ] Verify imports without manually modifying `sys.path`.
 - [ ] Run experiments interactively, then move reproducible calculations into modules and tests.
 
 **Completion gate:** A fresh console can import the package and `uv run pytest` can discover tests once written.
 
 ## 1. Mathematical foundations
 
-- [ ] Review derivatives, initial-value problems, separable ODEs and definite integration.
+- [ ] Review derivatives, initial-value problems, separable ODEs and definite integration using the [mathematical review](../06_learning/01_phase_01_mathematical_review.md).
+- [ ] Complete the independent exercises in that review and record the results.
+- [ ] Review the [hydraulic foundations](../06_learning/02_phase_01_hydraulic_foundations.md).
 - [ ] Draw the tank, define the control volume and identify inflow, outflow and stored volume.
 - [ ] State assumptions: rigid constant-area tank, incompressible fluid, atmospheric outlet and free surface, quasi-steady discharge.
 - [ ] Derive conservation of volume and substitute the tank geometry relationship.
 - [ ] Derive or justify Torricelli discharge including the discharge coefficient.
 - [ ] Obtain the first-order nonlinear water-depth ODE.
-- [ ] Check dimensional consistency of each term using feet, cubic feet and seconds.
+- [ ] Check dimensional consistency of each term using the selected engineering units and necessary conversions.
 - [ ] Derive the zero-inflow analytical solution by separation of variables without consulting implementation code.
 - [ ] Derive the emptying time and explain why the analytical expression must not be extended past emptying without a physical boundary condition.
 - [ ] Determine the equilibrium condition for constant positive inflow; explain the sign of the derivative above and below equilibrium.
+
+- [ ] Define the valid depth domain and zero-inflow behavior after emptying before implementing solvers.
+- [ ] Verify the derived solution by differentiation and substitution of the initial condition.
+
+**Completion gate:** Independently explain and verify the governing ODE, analytical solution, emptying time and equilibrium condition.
 
 **Deliverable:** Handwritten or Markdown derivation with assumptions, units and initial conditions.
 
@@ -40,8 +48,8 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 
 Suggested modules: `core/constants.py`, `core/units.py`, `core/validation.py`, `hydraulics/geometry.py`, `hydraulics/discharge.py`, `models/single_tank/parameters.py`, `tank.py`, `equations.py`, `analytical.py`.
 
-- [ ] Define gravity (32.174 ft/s²) and US customary hydraulic conventions; use feet, cubic feet, cfs and seconds internally.
-- [ ] Implement and independently test unit conversions in `core/units.py`: inches to feet, cubic feet to US gallons, cfs to gpm, and seconds to minutes. Convert inputs before hydraulic calculations and convert outputs for reporting.
+- [ ] Define gravity (32.174 ft/s²) and document the applicable engineering units.
+- [ ] Implement and independently test unit conversions in `core/units.py`: inches to feet, cubic feet to US gallons, cfs to gpm, and seconds to minutes. Apply conversions only where required for dimensional consistency; test inverse conversions as applicable.
 - [ ] Decide how to represent tank area, outlet area or diameter, discharge coefficient and initial depth.
 - [ ] Validate finite parameters, positive tank area and outlet dimensions, nonnegative depth and physically appropriate discharge coefficient.
 - [ ] Implement geometry and orifice discharge calculations independently.
@@ -50,13 +58,14 @@ Suggested modules: `core/constants.py`, `core/units.py`, `core/validation.py`, `
 - [ ] Implement the analytical solution and emptying time independently of numerical solvers.
 - [ ] Check the derivative at initial depth, zero depth and equilibrium where applicable.
 - [ ] Decide how invalid physical inputs differ from small numerical excursions near a boundary.
+- [ ] Verify zero discharge at zero depth, proportionality to outlet area, square-root dependence on depth, and inverse dependence of the depth derivative on tank area at fixed net flow.
 - [ ] Write unit tests for geometry, discharge, parameters, derivative and analytical solution.
 
 **Completion gate:** Physical functions can be exercised in Spyder without importing a numerical solver.
 
 ## 3. Shared solver contract
 
-Suggested modules: `core/types.py`, `core/protocols.py`, `solvers/base.py`, `simulation/results.py` (introduce only as needed).
+Start with a callable derivative and a simple result representation. Introduce `core/types.py`, `core/protocols.py`, `solvers/base.py` and `simulation/results.py` only when needed; no abstract class or protocol is required initially. Refine the contract after Euler works.
 
 - [ ] Define inputs: derivative function, initial state, start/end times and fixed step size or adaptive tolerances.
 - [ ] Define state shape `(n_states,)` and result history shape `(n_times, n_states)`.
@@ -64,14 +73,17 @@ Suggested modules: `core/types.py`, `core/protocols.py`, `solvers/base.py`, `sim
 - [ ] Validate finite initial state, increasing time interval and positive step size.
 - [ ] Decide how to handle a final partial step without exceeding the requested end time.
 - [ ] Ensure solvers do not import tank physics or silently clamp state values.
-- [ ] Test the contract with a constant derivative and a simple exponential-decay ODE unrelated to hydraulics.
+- [ ] Prepare constant-derivative and exponential-decay contract tests using the [benchmark exercises](../06_learning/05_phase_01_benchmark_exercises.md); execute them after implementing Euler.
+
+**Completion gate:** A minimal interface is documented and the benchmark inputs and analytical references are prepared; executable contract tests are completed with Euler.
 
 ## 4. Forward Euler
 
+- [ ] Review the [numerical integration guide](../06_learning/03_phase_01_numerical_integration.md) and use its Euler equations.
 - [ ] Review the tangent-line approximation and derive the Euler update.
 - [ ] Implement the time-stepping loop yourself in `solvers/euler.py`.
 - [ ] Inspect the first three steps manually using a calculator and Spyder's variable explorer.
-- [ ] Test constant derivative, zero derivative and exponential decay.
+- [ ] Test constant derivative, zero derivative, time-dependent derivative and exponential decay using the common benchmark definitions.
 - [ ] Test a two-component state with independently known solutions to establish Phase 03 compatibility.
 - [ ] Compare tank drainage against the analytical solution over a smooth pre-emptying interval.
 - [ ] Repeat with smaller step sizes and explain the observed change in error.
@@ -90,6 +102,8 @@ Suggested modules: `core/types.py`, `core/protocols.py`, `solvers/base.py`, `sim
 - [ ] Compare error and derivative evaluation counts at common step sizes.
 - [ ] Confirm approximately second- and fourth-order convergence respectively on smooth benchmarks before roundoff dominates.
 
+**Completion gate:** Heun and RK4 pass the common benchmarks, preserve input states and demonstrate their expected convergence orders.
+
 ## 6. SciPy adaptive integration
 
 - [ ] Read the official `scipy.integrate.solve_ivp` documentation.
@@ -99,6 +113,8 @@ Suggested modules: `core/types.py`, `core/protocols.py`, `solvers/base.py`, `sim
 - [ ] Normalize SciPy's state-history orientation to the project convention.
 - [ ] Inspect success, status, message and derivative evaluation counts.
 - [ ] Compare against the analytical solution at matching times; do not treat SciPy as an exact solution.
+
+**Completion gate:** RK45 returns the common result format and agrees with independent analytical references within justified tolerances.
 
 ## 7. Physical boundaries and simulation orchestration
 
@@ -113,20 +129,23 @@ Suggested modules: `models/single_tank/events.py`, `simulation/config.py`, `runn
 - [ ] Separate model-specific boundary policy from generic numerical integration.
 - [ ] Implement a minimal runner that selects a solver and returns a consistent result.
 
+**Completion gate:** Full zero-inflow drainage terminates or continues physically at emptying, with no negative accepted depths; unresolved event errors are reported explicitly.
+
 ## 8. Numerical verification and analysis
 
 Suggested modules: `analysis/error_metrics.py`, `convergence.py`, `conservation.py`, `benchmarking.py`.
 
+- [ ] Review the [numerical verification guide](../06_learning/04_phase_01_numerical_verification.md).
+- [ ] Define and justify acceptance tolerances before final verification runs.
 - [ ] Define absolute error, RMSE and maximum absolute error at matched output times; report depth errors in ft or in.
 - [ ] Avoid relative error at zero or document a denominator threshold.
 - [ ] Choose a smooth pre-emptying interval and at least four successively halved step sizes.
 - [ ] Calculate observed convergence order from error ratios.
 - [ ] Plot error versus step size on logarithmic axes and interpret departures from theoretical slopes.
 - [ ] Compare estimated emptying time with the analytical benchmark separately from smooth convergence tests.
-- [ ] Check volume balance in ft³: change in storage equals integrated net inflow (cfs integrated over seconds), within a documented numerical tolerance.
+- [ ] Check volume balance in gal or ft³: change in storage equals integrated net inflow using compatible flow and time units, within a documented numerical tolerance.
 - [ ] Document the quadrature used for flow integration and its own error contribution.
 - [ ] Record runtime and derivative evaluations; repeat timing measurements if making performance claims.
-- [ ] Define and justify acceptance tolerances before final verification runs.
 - [ ] Add regression tests for representative cases and invalid inputs.
 
 ### Baseline benchmark
@@ -146,6 +165,8 @@ Use the rounded US customary facility parameters from the [Phase 01 applied proj
 - [ ] Record expected values before executing the numerical model.
 - [ ] Compare results against the existing verification document and reconcile any differences in assumptions or tolerances.
 
+**Completion gate:** Independent references, error metrics, convergence, emptying error and volume balance meet documented acceptance criteria.
+
 ## 9. Scientific experiments and visualization
 
 - [ ] Create `experiments/phase_01/01_gravity_drainage.py`: plot analytical and numerical depth and discharge histories.
@@ -153,7 +174,10 @@ Use the rounded US customary facility parameters from the [Phase 01 applied proj
 - [ ] Label plots with units, parameters, solver and step size/tolerances. Report depth in ft, volume in US gal, discharge in gpm or cfs, elapsed time in minutes and depth errors in ft or in.
 - [ ] Keep plotting functions separate from integration algorithms.
 - [ ] Save reproducible experiment inputs and selected reference figures; keep disposable outputs in ignored directories.
-- [ ] Write a short interpretation of each experiment, including limitations and unexpected behavior.
+- [ ] Investigate how step size affects accuracy and effort, how closely the analytical solution is reproduced, and how solvers behave near emptying.
+- [ ] Record objective, hypothesis, methodology, results, interpretation and limitations for each experiment.
+
+**Completion gate:** Both required experiment scripts reproduce their results and answer their investigation questions. Applied facility alternatives and engineering recommendations belong to the separate applied project checklist.
 
 ## 10. Optional extension — variable inflow
 
@@ -166,6 +190,8 @@ Do not begin until the gravity-drainage MVP is verified.
 - [ ] Define overflow behavior explicitly or terminate at a specified maximum depth if capacity is modeled.
 - [ ] Create `experiments/phase_01/03_variable_inflow.py`.
 - [ ] Verify volume balance and document results.
+
+**Optional completion gate:** Inflow scenarios satisfy equilibrium, boundary and volume-balance checks. This extension is not required for release.
 
 ## 11. Phase 01 release gate
 
@@ -180,22 +206,29 @@ Do not begin until the gravity-drainage MVP is verified.
 - [ ] Review staged changes and commit with a descriptive multi-line message.
 - [ ] Explain each solver and its failure modes in your own words without relying on generated code.
 
+Development release does not imply completion of the [applied engineering project checklist](02_phase_01_applied_project_checklist.md). Complete that milestone separately.
+
 ## Suggested work sessions
 
 | Session | Focus | Approximate effort |
 |---|---|---:|
-| 1 | Environment and mathematical derivation | 2–3 h |
-| 2 | Physical model and analytical tests | 2–3 h |
-| 3 | Generic contract and Euler | 2–3 h |
-| 4 | Heun and RK4 | 3–4 h |
-| 5 | SciPy and boundary handling | 3–5 h |
-| 6 | Verification and experiments | 3–5 h |
-| 7 | Documentation and release review | 1–2 h |
+| 1 | Mathematical review | 3–5 h |
+| 2 | Hydraulic derivation | 2–3 h |
+| 3 | Physical model | 2–3 h |
+| 4 | Solver contract and Euler | 2–3 h |
+| 5 | Heun and RK4 | 3–4 h |
+| 6 | SciPy integration | 2–3 h |
+| 7 | Boundary handling | 2–4 h |
+| 8 | Numerical verification | 3–5 h |
+| 9 | Scientific experiments | 2–3 h |
+| 10 | Documentation and release | 1–2 h |
 
-Allow approximately 16–25 hours for independent learning, excluding the optional extension. Treat this as a planning estimate, not a deadline.
+Allow approximately 22–35 hours for independent learning, excluding the optional extension and separate applied engineering project. This is a planning estimate, not a deadline.
 
 ## References for independent study
 
+- Jaan Kiusalaas, *Numerical Methods in Engineering with Python 3*: review numerical integration and initial-value problems.
+- A calculus or differential equations textbook: review differentiation, definite integration and separation of variables.
 - [SciPy solve_ivp](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html)
 - [NumPy user guide](https://numpy.org/doc/stable/user/)
 - [Matplotlib documentation](https://matplotlib.org/stable/)
