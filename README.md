@@ -160,15 +160,7 @@ Outlet diameters specified in inches must be converted to feet before calculatin
 For zero inflow, the analytical solution is:
 
 $$
-h(t)=
-\left[
-\max\left(
-0,
-\sqrt{h_0}
--
-\frac{C_da\sqrt{2g}}{2A}t
-\right)
-\right]^2
+h(t)=\left[\max\left(0,\sqrt{h_0}-\frac{C_da\sqrt{2g}}{2A}t\right)\right]^2
 $$
 
 The analytical solution provides an independent benchmark for numerical verification.
