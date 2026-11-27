@@ -502,7 +502,7 @@ The hydraulic head difference establishes the driving force and direction of flo
 For a submerged connection governed by a simplified quasi-steady orifice discharge relationship:
 
 $$
-Q_{12}=C_da\operatorname{sgn}(\Delta h)\sqrt{2g|\Delta h|}
+Q_{12}=C_d a\,\mathrm{sgn}(\Delta h)\sqrt{2g|\Delta h|}
 $$
 
 where:
@@ -514,7 +514,7 @@ where:
 | $a$ | Connection cross-sectional area | ft² |
 | $g$ | Gravitational acceleration (32.174) | ft/s² |
 | $\Delta h$ | Hydraulic head difference | ft |
-| $\operatorname{sgn}(\Delta h)$ | Sign function determining flow direction | Dimensionless |
+| $\mathrm{sgn}(\Delta h)$ | Sign function determining flow direction | Dimensionless |
 | $\lvert\Delta h\rvert$ | Absolute magnitude of the hydraulic head difference | ft |
 
 Discharge may be expressed in gpm by applying the appropriate conversion factor.
@@ -523,18 +523,38 @@ Discharge may be expressed in gpm by applying the appropriate conversion factor.
 
 The sign function, also known as the signum function, is a mathematical operator that identifies whether a real number is positive, negative, or zero.
 
-It is defined as:
+The function is defined by three conditions.
+
+**Negative input:**
 
 $$
-\operatorname{sgn}(x)=\begin{cases}-1,&x<0\\0,&x=0\\1,&x>0\end{cases}
+\mathrm{sgn}(x)=-1
 $$
+
+Applicable when $x<0$.
+
+**Zero input:**
+
+$$
+\mathrm{sgn}(x)=0
+$$
+
+Applicable when $x=0$.
+
+**Positive input:**
+
+$$
+\mathrm{sgn}(x)=1
+$$
+
+Applicable when $x>0$.
 
 where:
 
 | Symbol | Description |
 |---|---|
 | $x$ | Real-valued input to the sign function |
-| $\operatorname{sgn}(x)$ | Dimensionless value representing the sign of the input |
+| $\mathrm{sgn}(x)$ | Dimensionless value representing the sign of the input |
 
 The sign function returns the following values:
 
@@ -556,11 +576,21 @@ The sign function establishes flow direction, while the absolute value of the hy
 
 The absolute value operator returns the nonnegative magnitude of a real number, regardless of its original sign.
 
-The absolute value of the hydraulic head difference is defined as:
+For a nonnegative hydraulic head difference:
 
 $$
-|\Delta h|=\begin{cases}\Delta h,&\Delta h\geq0\\-\Delta h,&\Delta h<0\end{cases}
+|\Delta h|=\Delta h
 $$
+
+Applicable when $\Delta h\geq0$.
+
+For a negative hydraulic head difference:
+
+$$
+|\Delta h|=-\Delta h
+$$
+
+Applicable when $\Delta h<0$.
 
 The absolute value ensures that the quantity evaluated within the square root remains nonnegative, regardless of flow direction.
 
@@ -590,27 +620,31 @@ The conservation equations account for the direction of inter-reservoir flow thr
 
 #### Alternative Piecewise Formulation
 
-The bidirectional flow relationship may also be expressed without the sign function:
-
-$$
-Q_{12}=\begin{cases}C_da\sqrt{2g(h_1-h_2)},&h_1>h_2\\0,&h_1=h_2\\-C_da\sqrt{2g(h_2-h_1)},&h_1<h_2\end{cases}
-$$
-
-Both formulations are mathematically equivalent.
-
-The piecewise formulation explicitly defines three possible hydraulic conditions:
+The bidirectional flow relationship may also be expressed without the sign function by defining three independent hydraulic conditions.
 
 **Forward flow:**
 
 When the water surface elevation in Reservoir 1 exceeds the water surface elevation in Reservoir 2:
 
 $$
-Q_{12}=C_da\sqrt{2g(h_1-h_2)}
+h_1>h_2
 $$
 
-**Hydraulic equilibrium between reservoirs:**
+The inter-reservoir discharge is:
+
+$$
+Q_{12}=C_d a\sqrt{2g(h_1-h_2)}
+$$
+
+**Equal hydraulic head:**
 
 When both reservoirs have equal water surface elevations:
+
+$$
+h_1=h_2
+$$
+
+The inter-reservoir discharge is:
 
 $$
 Q_{12}=0
@@ -621,17 +655,27 @@ $$
 When the water surface elevation in Reservoir 2 exceeds the water surface elevation in Reservoir 1:
 
 $$
-Q_{12}=-C_da\sqrt{2g(h_2-h_1)}
+h_1<h_2
 $$
 
+The inter-reservoir discharge is:
+
+$$
+Q_{12}=-C_d a\sqrt{2g(h_2-h_1)}
+$$
+
+The piecewise formulation and the sign-function formulation are mathematically equivalent.
+
 The sign-function formulation combines these three conditions into a single mathematical expression.
+
+Equal hydraulic head results in zero inter-reservoir flow but does not necessarily establish equilibrium for the entire system when external inflow or discharge is present.
 
 #### State Vector
 
 The coupled system is represented by the state vector:
 
 $$
-\mathbf{y}(t)=\begin{bmatrix}h_1(t)\\h_2(t)\end{bmatrix}
+\mathbf{y}(t)=[h_1(t),h_2(t)]^T
 $$
 
 where:
@@ -642,8 +686,13 @@ where:
 | $h_1(t)$ | Reservoir 1 water surface elevation at time $t$ | ft |
 | $h_2(t)$ | Reservoir 2 water surface elevation at time $t$ | ft |
 | $t$ | Elapsed time | s, min |
+| $T$ | Transpose operator | Not applicable |
+
+The superscript $T$ represents the transpose of the displayed row vector, producing a mathematical column vector.
 
 The state vector contains the dependent variables that must be evaluated simultaneously during numerical integration.
+
+#### Coupled System of Ordinary Differential Equations
 
 Rearranging the conservation equations gives the individual state derivatives.
 
@@ -659,11 +708,25 @@ $$
 \frac{dh_2}{dt}=\frac{Q_{12}-Q_{out}}{A_2}
 $$
 
-The coupled system of ordinary differential equations may therefore be expressed as:
+The state derivative vector is:
 
 $$
-\frac{d\mathbf{y}}{dt}=\begin{bmatrix}(Q_{in}-Q_{12})/A_1\\(Q_{12}-Q_{out})/A_2\end{bmatrix}
+\frac{d\mathbf{y}}{dt}=[\frac{dh_1}{dt},\frac{dh_2}{dt}]^T
 $$
+
+Substituting the individual conservation equations gives:
+
+$$
+\frac{d\mathbf{y}}{dt}=[\frac{Q_{in}-Q_{12}}{A_1},\frac{Q_{12}-Q_{out}}{A_2}]^T
+$$
+
+where:
+
+| Symbol | Description | Unit |
+|---|---|---|
+| $d\mathbf{y}/dt$ | System state derivative vector | ft/s, ft/min |
+| $dh_1/dt$ | Rate of change in Reservoir 1 water surface elevation | ft/s, ft/min |
+| $dh_2/dt$ | Rate of change in Reservoir 2 water surface elevation | ft/s, ft/min |
 
 Both state derivatives depend on the inter-reservoir discharge, which depends on the water surface elevations in both reservoirs.
 
@@ -686,7 +749,7 @@ $$
 The initial state vector is:
 
 $$
-\mathbf{y}_0=\begin{bmatrix}h_{1,0}\\h_{2,0}\end{bmatrix}
+\mathbf{y}_0=[h_{1,0},h_{2,0}]^T
 $$
 
 where:
@@ -730,7 +793,7 @@ The external inflow and outlet discharge relationships, reservoir geometry, and 
 - [ ] Establish initial and boundary conditions.
 - [ ] Investigate bidirectional hydraulic flow relationships.
 - [ ] Implement and verify the hydraulic sign convention.
-- [ ] Apply numerical integration to coupled systems of ordinary differential equations.
+- [ ] Apply numerical integration to coupled systems of ODEs.
 - [ ] Investigate hydraulic equalization.
 - [ ] Investigate flow reversal.
 - [ ] Evaluate equilibrium conditions under external inflow and discharge.
@@ -751,29 +814,69 @@ $$
 \frac{d\mathbf{y}}{dt}=f(t,\mathbf{y})
 $$
 
+The initial condition is:
+
+$$
+\mathbf{y}(t_0)=\mathbf{y}_0
+$$
+
+where:
+
+| Symbol | Description |
+|---|---|
+| $\mathbf{y}$ | System state vector containing the dependent variables |
+| $t$ | Independent time variable |
+| $t_0$ | Initial time |
+| $\mathbf{y}_0$ | Initial state vector |
+| $f(t,\mathbf{y})$ | Function defining the governing state derivatives |
+| $d\mathbf{y}/dt$ | Rate of change of the system state with respect to time |
+
 Use a common derivative interface, `f(t, y)`, with model parameters supplied independently.
 
 ### Numerical Conventions
 
 | Convention | Requirement |
 |---|---|
-| Time | Seconds internally |
+| Engineering units | US customary and US municipal water and wastewater industry units |
+| Time | s, min, hr, days, as appropriate |
+| Flow rate | gpm, cfs, MGD |
+| Volume | gal, ft³, MG |
+| Concentration | mg/L |
+| Reaction coefficients | s⁻¹, hr⁻¹, day⁻¹ |
 | State vector | One-dimensional NumPy array |
 | State shape | `(n_states,)` |
 | Time history shape | `(n_times,)` |
 | State history shape | `(n_times, n_states)` |
-| Hydraulic computational units | Feet, cubic feet and seconds |
-| Concentration | mg/L |
-| Reaction coefficients | s⁻¹ |
 | Numerical solvers | Unit-independent |
+| Dimensional consistency | Required for all governing equations |
 | Physical boundaries | Managed by physical models and simulation orchestration |
 | Unit conversions | Managed by the core package |
+
+### Engineering Units
+
+Engineering units shall be selected as appropriate for the governing equations and intended engineering application.
+
+A universal computational unit system is not required.
+
+Each physical model shall document the units associated with its input parameters, state variables, state derivatives and calculated results.
+
+Time units must remain consistent throughout an individual numerical simulation. State derivative units must be compatible with the corresponding state variables and selected time units.
+
+Necessary unit conversions shall be performed where required to maintain dimensional consistency.
+
+### Numerical State Representation
 
 Even scalar physical models use a one-dimensional state array containing a single state variable.
 
 Numerical solvers must support both scalar and vector-valued physical models without embedding tank-specific physics in the integration routines.
 
+The mathematical column-vector notation used in the governing equations does not require a two-dimensional NumPy array.
+
+### Physical Boundary Handling
+
 Physical boundary handling and event definitions belong to the model or simulation layer.
+
+Numerical integration algorithms shall remain independent of the physical assumptions, engineering units and boundary conditions associated with individual models.
 
 ## Engineering Relevance
 
@@ -810,6 +913,7 @@ The baseline model assumes:
 The project does not model water hammer, pipe-network transients, detailed pump hydraulics or full distribution-system behavior.
 
 Applied engineering scenarios are hypothetical and do not constitute approved engineering designs, maintenance procedures or personnel-entry authorization.
+
 
 ## References
 
