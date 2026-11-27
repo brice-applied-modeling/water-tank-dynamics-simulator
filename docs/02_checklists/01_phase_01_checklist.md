@@ -17,7 +17,7 @@ Related documents: [Project scope](../00_overview/01_project_scope.md), [Mathema
 - [x] Verify the src-layout package is importable in Spyder and from the terminal.
 - [x] Disable AI code generation if enabled; use ordinary editor completion, debugger, official documentation and textbooks.
 - [x] Maintain a short learning log: hypothesis, attempted approach, observed error, diagnosis and resolution.
-- [ ] Verify imports without manually modifying `sys.path`.
+- [x] Verify imports without manually modifying `sys.path`.
 - [ ] Run experiments interactively, then move reproducible calculations into modules and tests.
 
 **Completion gate:** A fresh console can import the package and `uv run pytest` can discover tests once written.

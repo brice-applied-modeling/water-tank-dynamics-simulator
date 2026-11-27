@@ -12,11 +12,13 @@ dependencies = [
     "scipy>=1.18.1",
     "seaborn>=0.13.2",
     "spyder-kernels>=3.1.7",
+
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=9.2.0",
+    "sympy>=1.14.0",
 ]
 
 [build-system]

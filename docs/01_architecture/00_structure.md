@@ -123,6 +123,17 @@ water-tank-dynamics/
 │       ├── 02_forced_reservoirs.py
 │       └── 03_flow_reversal.py
 │
+├── review/
+│   ├── README.md
+│   ├── phase_01/
+│   │   ├── 01_mathematical_review.py
+│   │   ├── 02_hydraulic_foundations.py
+│   │   ├── 03_numerical_integration.py
+│   │   ├── 04_numerical_verification.py
+│   │   └── 05_benchmark_exercises.py
+│   ├── phase_02/
+│   └── phase_03/
+│
 ├── projects/                               # Completed applied engineering assignments and presentation of findings
 │   ├── README.md
 │   │
@@ -208,6 +219,7 @@ water-tank-dynamics/
 | `docs/` | Engineering requirements, theory, architecture, research and learning records. |
 | `src/` | Installable, reusable scientific computing package. |
 | `experiments/` | Reproducible scientific investigations and numerical learning exercises. |
+| `review/` | Mathematical exercises and exploratory calculations |
 | `projects/` | Applied engineering case studies, executable analysis scripts and selected final deliverables. |
 | `outputs/` | Automatically generated simulation data, figures and tables; excluded from Git. |
 | `tests/` | Automated unit and integration verification. |
