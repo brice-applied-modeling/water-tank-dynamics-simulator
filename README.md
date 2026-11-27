@@ -36,35 +36,43 @@ Phase 01 is the initial deliverable. Later phases will reuse the numerical integ
 
 Each phase includes an applied engineering project that demonstrates the practical application of the corresponding physical models and numerical methods.
 
-## Engineering Unit Conventions
+### Engineering Unit Conventions
 
-The simulator follows US customary engineering units and established US municipal water and wastewater industry practices.
+The Water Tank Dynamics Simulator uses US customary engineering units consistent with standard US municipal water and wastewater industry practices.
 
-Hydraulic calculations use a consistent foot-second computational system. Engineering inputs and reported results may use other customary industry units, provided that appropriate conversions are performed.
+| Quantity | Unit |
+|---|---|
+| Length | ft |
+| Water depth | ft |
+| Elevation | ft |
+| Hydraulic head | ft |
+| Pipe and outlet diameter | in |
+| Tank diameter | ft |
+| Cross-sectional area | ft² |
+| Storage volume | gal, ft³, MG |
+| Flow rate | gpm, cfs, MGD |
+| Velocity | ft/s (fps) |
+| Gravitational acceleration | ft/s² |
+| Pressure | psi |
+| Time | s, min, hr, days |
+| Temperature | °F |
+| Mass density | lbm/ft³ |
+| Specific weight | lbf/ft³ |
+| Concentration | mg/L |
+| Chemical mass | lb |
+| Chemical loading | lb/day |
+| Reaction coefficient | hr⁻¹, day⁻¹, s⁻¹ |
+| Numerical depth error | ft, in |
+| Discharge coefficient | Dimensionless |
 
-### Computational and Reporting Units
+Units shall be selected as appropriate for each engineering calculation. All equations must maintain dimensional consistency, and necessary conversion factors shall be documented.
 
-| Quantity | Internal Computational Unit | Engineering Reporting Unit |
-|---|---|---|
-| Length | ft | ft, in |
-| Water depth | ft | ft |
-| Elevation | ft | ft |
-| Outlet diameter | ft | in |
-| Area | ft² | ft² |
-| Volume | ft³ | gal, MG |
-| Flow rate | ft³/s (cfs) | cfs, gpm, MGD |
-| Velocity | ft/s | fps |
-| Acceleration | ft/s² | ft/s² |
-| Time | s | s, min, hr, days |
-| Pressure | lbf/ft², if required | psi |
-| Pressure head | ft | ft |
-| Mass density | lbm/ft³ | lbm/ft³ |
-| Specific weight | lbf/ft³ | lbf/ft³ |
-| Concentration | mg/L | mg/L |
-| Chemical mass | lbm | lb |
-| Chemical mass rate | lbm/s, if required | lb/day |
-| Reaction coefficient | s⁻¹ | hr⁻¹, day⁻¹ |
-| Numerical depth error | ft | ft, in |
+Physical constants and reusable unit conversion functions are maintained in:
+
+- `src/tank_dynamics/core/constants.py`
+- `src/tank_dynamics/core/units.py`
+
+Numerical integration methods remain unit-independent.
 
 Water quality concentrations remain in mg/L, consistent with US water and wastewater industry practices.
 
@@ -125,9 +133,7 @@ $$
 Substituting the gravity discharge relationship into the conservation equation gives:
 
 $$
-\frac{dh}{dt}
-=
-\frac{Q_{in}(t)-C_da\sqrt{2gh}}{A}
+\frac{dh}{dt}=\frac{Q_{in}(t)-C_da\sqrt{2gh}}{A}
 $$
 
 ### Model Variables
