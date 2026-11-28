@@ -63,21 +63,27 @@ print(f'Exercise 4 = {deriv.doit()}')
 
 
 
-# %% 2. Initial-value problems
+# %% 2. Chain-rule problems
 
 # Exercise 1
 
 
-# %% 3. Separable ordinary differential equations
+
+# %% 3. Initial-value problems
+
+# Exercise 1
 
 
-# %% 4. Indefinite integration
+# %% 4. Separable ordinary differential equations# %% 3. Separable ordinary differential equations
 
 
-# %% 5. Definite integration
+# %% 5. Indefinite integration
 
 
-# %% 6. Engineering applications
+# %% 6. Definite integration
 
 
-# %% 7. Findings and observations
+# %% 7. Engineering applications
+
+
+# %% 8. Findings and observations
