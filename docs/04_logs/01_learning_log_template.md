@@ -1,4 +1,4 @@
-# Learning Log — Session XXX
+# Learning Log Session XXX
 
 - **Date:** YYYY-MM-DD
 - **Phase:** 01
