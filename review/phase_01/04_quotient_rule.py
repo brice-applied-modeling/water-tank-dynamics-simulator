@@ -32,6 +32,11 @@ def calculate_power_derivative(function: str, variable: str, arg: int | float) -
             The numeric value of the calculated derivative using the
             power rule with regards to the provided argument to evaluate
             the function.
+            
+    Raises
+    ------
+    ValueError
+        If the provided mathematical expression is invalid.
     """
     pass
 
@@ -61,5 +66,13 @@ def calculate_quotient_rule(numerator: str, denominator: str, variable:str, arg:
             The numeric value of the calculated derivative using the
             quotient rule with regards to the provided argument to evaluate
             the expression.
+            
+    Raises
+    ------
+    ZeroDivisionError
+        If the original denominator evaluates to zero at
+        the provided argument.
+    ValueError
+        If the provided mathematical expression is invalid.
     """
     pass
