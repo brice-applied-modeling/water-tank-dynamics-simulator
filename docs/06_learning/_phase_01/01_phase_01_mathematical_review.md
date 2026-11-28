@@ -21,7 +21,7 @@ Here $x$ is the independent variable, $f$ is a differentiable function, $\Delta 
 
 $c,n,k$ are constants; $g$ is another differentiable function; $e$ is the base of natural logarithms. Apply rules on their valid domains.
 
-Differentiate independently: $3x^2+5x-4$, $\sqrt{x}$, $(5-2x)^2$, and $e^{-0.2x}$. Explain why the chain rule matters for tank storage.
+Differentiate independently: $3x^2+5x-4$, $\sqrt{x}+6$, $(5-2x)^2$, and $e^{-0.2x}$. Explain why the chain rule matters for tank storage.
 
 ## Initial-value problems
 
